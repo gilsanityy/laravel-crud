@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\CustomAuthController;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -17,15 +19,16 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/user', function () {
-    $names = ['Alpha', 'Bravo', 'Charlie', 'Delta'];
+Route::get('/users', [UserController::class, 'index'])->name('users.index');
 
-    foreach ($names as $name) {
-        print ($name) . '<br>';
-    }
-})->name('userList');
+Route::get('/users/add', [UserController::class, 'add'])->name('users.add');
 
-Route::get('/user/{index}/{name?}', function ($index, $name = 'Test') {
-    $names = ['Alpha', 'Bravo', 'Charlie', 'Delta'];
-    return $names[$index] . ' ' . $name;
-});
+Route::post('/users/store', [UserController::class, 'store'])->name('users.store');
+
+Route::get('/users/{user}', [UserController::class, 'show'])->name('users.show');
+
+Route::get('/users/{user}/edit', [UserController::class, 'edit'])->name('users.edit');
+
+Route::post('/users/{user}/update', [UserController::class, 'update'])->name('users.update');
+
+Route::get('/users/{user}/destroy', [UserController::class, 'destroy'])->name('users.destroy');
