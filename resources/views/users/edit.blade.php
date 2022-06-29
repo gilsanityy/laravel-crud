@@ -74,6 +74,7 @@
                                 @error('country_code')
                                     <span class="text-danger">{{ $message }}</span>
                                 @enderror
+                                <br>
                             @endforeach
                             <button type="submit" class="btn btn-primary">Submit</button>
                             <a href="{{ route('users.index') }}" class="btn btn-primary">Back</a>

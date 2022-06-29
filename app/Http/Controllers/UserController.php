@@ -4,15 +4,24 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use App\Models\UserAddress;
+use App\Rules\Uppercase;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 class UserController extends Controller
 {
+    protected $user;
+    protected $userAddress;
+
+    public function __construct(User $user, UserAddress $userAddress)
+    {
+        $this->user = $user;
+        $this->userAddress = $userAddress;
+    }
+
     public function index()
     {
-        $data = User::get();
-
-        return view('users.index')->with(['data' => $data]);
+        return view('users.index')->with(['data' => $this->user->get()]);
     }
 
     public function add()
@@ -22,12 +31,6 @@ class UserController extends Controller
 
     public function store(Request $request)
     {
-        // User::add([
-        //     'name' => $request->name,
-        //     'email' => $request->email,
-        //     'password' => $request->password
-        // ]);
-
         // Validation
         $validated = $request->validate([
             'name' => 'required|string|min:1|max:100',
@@ -36,16 +39,16 @@ class UserController extends Controller
             'house_number' => 'required|int',
             'street' => 'required|string',
             'city' => 'required|string',
-            'country_code' => 'required|string',
+            'country_code' => new Uppercase,
         ]);
 
-        $user = new User();
+        $user = new $this->user;
         $user->name = $request->name;
         $user->email = $request->email;
         $user->password = $request->password;
         $user->save();
 
-        $userAddress = new UserAddress();
+        $userAddress = new $this->userAddress;
         $userAddress->user_id = $user->id;
         $userAddress->house_number = $request->house_number;
         $userAddress->street = $request->street;
@@ -56,27 +59,21 @@ class UserController extends Controller
         return redirect()->route('users.index');
     }
 
-    public function show($user)
+    public function show(User $user)
     {
-        $data = User::where('id', $user)->first();
-
-
-
         return view('users.show')->with([
-            'data' => $data,
+            'data' => $user,
         ]);
     }
 
     public function edit($user)
     {
-        $data = User::where('id', $user)->first();
-
         return view('users.edit')->with([
-            'data' => $data,
+            'data' => $this->user->first(),
         ]);
     }
 
-    public function update(Request $request, $user /*, $userAddresses*/)
+    public function update(Request $request, User $user)
     {
 
         // Validation
@@ -87,23 +84,16 @@ class UserController extends Controller
             'house_number' => 'required|int',
             'street' => 'required|string',
             'city' => 'required|string',
-            'country_code' => 'required|string',
+            'country_code' => new Uppercase,
         ]);
 
-        $user = User::where('id', $user)->first();
+        $user = $user->first();
         $user->name = $request->name;
         $user->email = $request->email;
         $user->password = $request->password;
-        // $user->house_number = $request->house_number;
-        // $user->street = $request->street;
-        // $user->city = $request->city;
-        // $user->country_code = $request->country_code;
         $user->save();
 
-
-
-        $userAddresses = UserAddress::where('user_id', $user->id)->first();
-        // dd($request->all());
+        $userAddresses = $this->userAddress->where('user_id', $user->id)->first();
         $userAddresses->house_number = $request->house_number;
         $userAddresses->street = $request->street;
         $userAddresses->city = $request->city;
