@@ -6,6 +6,7 @@ use App\Models\User;
 use App\Models\UserAddress;
 use App\Rules\Uppercase;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 
 class UserController extends Controller
@@ -45,7 +46,7 @@ class UserController extends Controller
         $user = new $this->user;
         $user->name = $request->name;
         $user->email = $request->email;
-        $user->password = $request->password;
+        $user->password = Hash::make($validated['password']);
         $user->save();
 
         $userAddress = new $this->userAddress;
@@ -66,10 +67,11 @@ class UserController extends Controller
         ]);
     }
 
-    public function edit($user)
+    public function edit(User $user)
     {
         return view('users.edit')->with([
-            'data' => $this->user->first(),
+            // 'data' => $this->user->first(),
+            'data' => $user,
         ]);
     }
 
@@ -87,10 +89,10 @@ class UserController extends Controller
             'country_code' => new Uppercase,
         ]);
 
-        $user = $user->first();
+        // $user = $user->first();
         $user->name = $request->name;
         $user->email = $request->email;
-        $user->password = $request->password;
+        $user->password = Hash::make($validated['password']);
         $user->save();
 
         $userAddresses = $this->userAddress->where('user_id', $user->id)->first();
