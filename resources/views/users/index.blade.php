@@ -1,7 +1,7 @@
 @extends('master')
 
 @section('content')
-    <div class="container shadow rounded pb-3 bg-light">
+    <div class="container shadow rounded pb-3 bg-light" style="margin-bottom: 200px;">
         <div class="row mt-5">
             <div class="col">
                 <div class="text-right mt-3 mb-3">
@@ -20,6 +20,7 @@
                                     <th scope="col">ID</th>
                                     <th scope="col">Name</th>
                                     <th scope="col">Email</th>
+                                    <th scope="col">Photo</th>
                                     <th scope="col">House Number</th>
                                     <th scope="col">Street</th>
                                     <th scope="col">City</th>
@@ -33,6 +34,8 @@
                                         <th scope="row">{{ $item->id }}</th>
                                         <td>{{ $item->name }}</td>
                                         <td>{{ $item->email }}</td>
+                                        <td><img src="{{ asset($item->image) }}" alt="" width="25"
+                                                height="25" style="border-radius: 50px;"></td>
                                         @foreach ($item->userAddresses as $row)
                                             <td>{{ $row->house_number }}</td>
                                             <td>{{ $row->street }}</td>

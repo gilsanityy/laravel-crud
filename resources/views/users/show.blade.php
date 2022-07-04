@@ -6,7 +6,9 @@
             <div class="col">
                 <div class="card shadow">
                     <div class="card-body">
-                        <h1>User Details</h1>
+                        <h1>User Details <img src="{{ asset($data->image) }}" alt="" width="50" height="50"
+                                style="border-radius: 50px;" class="shadow">
+                        </h1>
                         <div class="form-group">
                             <label for="exampleInputName1">Name</label>
                             <input type="text" class="form-control" name="name" value="{{ $data->name }}" disabled>

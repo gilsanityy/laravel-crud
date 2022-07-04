@@ -7,7 +7,7 @@
 
 <body class="bg-primary">
     <div class="container shadow rounded mb-5 pb-3 pt-4 pl-5 pr-5 bg-light" style="margin-top: 80px; width: 40%;">
-        <form action="{{ route('auth.store') }}" method="POST">
+        <form action="{{ route('auth.store') }}" method="POST" enctype="multipart/form-data">
             @csrf
             <h2 class="fw-bold mb-3 text-uppercase">Register</h2>
             <div class="row">
@@ -34,6 +34,16 @@
                         @enderror
                         <input type="password" class="form-control" name="password" />
                         <label class="form-label">Password</label>
+                    </div>
+
+                    <div class="row mb-4 ml-1">
+                        <div class="form-group">
+                            @error('image')
+                                <span class="text-danger">{{ $message }}</span>
+                            @enderror
+                            <label for="exampleFormControlFile1">Upload image</label>
+                            <input type="file" name="image" class="form-control-file" id="exampleFormControlFile1">
+                        </div>
                     </div>
                 </div>
                 <div class="col-6">

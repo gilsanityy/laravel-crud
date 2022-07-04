@@ -7,6 +7,7 @@ use App\Models\UserAddress;
 use App\Rules\Uppercase;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 class UserController extends Controller
@@ -43,10 +44,14 @@ class UserController extends Controller
             'country_code' => new Uppercase,
         ]);
 
+        $user = $request->all();
         $user = new $this->user;
         $user->name = $request->name;
         $user->email = $request->email;
         $user->password = Hash::make($validated['password']);
+        $fileName = time() . $request->file('image')->getClientOriginalName();
+        $path = $request->file('image')->storeAs('images', $fileName, 'public');
+        $user['image'] = '/storage/' . $path;
         $user->save();
 
         $userAddress = new $this->userAddress;
@@ -56,6 +61,8 @@ class UserController extends Controller
         $userAddress->city = $request->city;
         $userAddress->country_code = $request->country_code;
         $userAddress->save();
+
+
 
         return redirect()->route('users.index');
     }
@@ -70,19 +77,18 @@ class UserController extends Controller
     public function edit(User $user)
     {
         return view('users.edit')->with([
-            // 'data' => $this->user->first(),
             'data' => $user,
         ]);
     }
 
     public function update(Request $request, User $user)
     {
-
         // Validation
         $validated = $request->validate([
             'name' => 'required|string|min:1|max:100',
             'email' => 'required|email',
             'password' => 'required|string',
+            // 'image' => 'required|mimes:jpg,png,jpeg,gif|max:5048',
             'house_number' => 'required|int',
             'street' => 'required|string',
             'city' => 'required|string',
@@ -93,6 +99,14 @@ class UserController extends Controller
         $user->name = $request->name;
         $user->email = $request->email;
         $user->password = Hash::make($validated['password']);
+
+        // $request->image->move(public_path('images'), $newImageName);
+
+        // Storage::disk('public')->put($, $request->file('image'));
+
+        $fileName = time() . $request->file('image')->getClientOriginalExtension();
+        $path = $request->file('image')->storeAs('images', $fileName, 'public');
+        $user['image'] = '/storage/' . $path;
         $user->save();
 
         $userAddresses = $this->userAddress->where('user_id', $user->id)->first();

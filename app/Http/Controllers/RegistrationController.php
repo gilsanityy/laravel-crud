@@ -38,10 +38,23 @@ class RegistrationController extends Controller
             'country_code' => new Uppercase,
         ]);
 
+        // if ($request->hasFile('image')) {
+        //     $destination_path = 'public/images/profile';
+        //     $image = $request->file('image');
+        //     $image_name = $image->getClientOriginalName();
+        //     $path = $request->file('image')->storeAs($destination_path, $image_name);
+
+        //     $input['image'] = $image_name;
+        // }
+        $user = $request->all();
         $user = new $this->user;
         $user->name = $request->name;
         $user->email = $request->email;
         $user->password = Hash::make($validated['password']);
+        // $input = $request->all();
+        $fileName = time() . '-' . $request->file('image')->getClientOriginalName();
+        $path = $request->file('image')->storeAs('images', $fileName, 'public');
+        $user['image'] = '/storage/' . $path;
         $user->save();
 
         $userAddress = new $this->userAddress;
@@ -51,6 +64,8 @@ class RegistrationController extends Controller
         $userAddress->city = $request->city;
         $userAddress->country_code = $request->country_code;
         $userAddress->save();
+
+
 
         return redirect()->route('auth.index');
     }

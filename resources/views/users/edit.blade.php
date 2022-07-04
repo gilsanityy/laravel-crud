@@ -1,13 +1,14 @@
 @extends('master')
 
 @section('content')
-    <div class="container">
+    <div class="container" style="margin-bottom: 200px;">
         <div class="row mt-5 w-50">
             <div class="col">
                 <div class="card shadow">
                     <div class="card-body">
                         <h1>Edit user</h1>
-                        <form action="{{ route('users.update', ['user' => $data->id]) }}" method="post">
+                        <form action="{{ route('users.update', ['user' => $data->id]) }}" method="post"
+                            enctype="multipart/form-data">
                             @csrf
                             <div class="row">
                                 <div class="col-6">
@@ -33,6 +34,16 @@
                                             value="{{ $data->password }}">
                                     </div>
                                     @error('password')
+                                        <span class="text-danger">{{ $message }}</span>
+                                    @enderror
+                                    <div class="form-group">
+                                        <label for="exampleFormControlFile1">Change Image</label>
+                                        <img src="{{ asset($data->image) }}" alt="" width="200" height="200"
+                                            style="border-radius: 100px; margin: 25px 0 25px 0;">
+                                        <input type="file" name="image" class="form-control-file"
+                                            id="exampleFormControlFile1">
+                                    </div>
+                                    @error('image')
                                         <span class="text-danger">{{ $message }}</span>
                                     @enderror
                                 </div>

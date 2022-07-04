@@ -1,13 +1,13 @@
 @extends('master')
 
 @section('content')
-    <div class="container">
+    <div class="container mb-5">
         <div class="row mt-5 w-50">
             <div class="col">
                 <div class="card shadow">
                     <div class="card-body">
                         <h1>Add new user</h1>
-                        <form action="{{ route('users.store') }}" method="post">
+                        <form action="{{ route('users.store') }}" method="post" enctype="multipart/form-data">
                             @csrf
                             <div class="form-group">
                                 <label for="exampleInputName1">Name</label>
@@ -62,6 +62,14 @@
                                     placeholder="Enter Country Code" value="{{ old('country_code') }}">
                             </div>
                             @error('country_code')
+                                <span class="text-danger">{{ $message }}</span>
+                            @enderror
+                            <div class="form-group">
+                                <label for="exampleFormControlFile1">Upload image</label>
+                                <input type="file" name="image" class="form-control-file" value="{{ old('image') }}"
+                                    id="exampleFormControlFile1">
+                            </div>
+                            @error('image')
                                 <span class="text-danger">{{ $message }}</span>
                             @enderror
                             <br>

@@ -23,6 +23,7 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
+
 Route::group(['middleware' => 'preventBackHistory'], function () {
     Route::get('/login', [AuthController::class, 'index'])->name('auth.index')->middleware('accessControl');
     Route::post('/login', [AuthController::class, 'authenticate'])->name('auth.authenticate');
@@ -37,19 +38,19 @@ Route::middleware('checkAuth')->group(function () {
     Route::get('/users/{user}', [UserController::class, 'show'])->name('users.show');
     Route::get('/users/{user}/edit', [UserController::class, 'edit'])->name('users.edit');
     Route::post('/users/{user}/update', [UserController::class, 'update'])->name('users.update');
-    Route::get('/users/{user}/destroy', [UserContrsoller::class, 'destroy'])->name('users.destroy');
+    Route::get('/users/{user}/destroy', [UserController::class, 'destroy'])->name('users.destroy');
     Route::get('/logout', [AuthController::class, 'logout'])->name('auth.logout');
 });
 
-Route::prefix('admin')->name('admin.')->group(function () {
+// Route::prefix('admin')->name('admin.')->group(function () {
 
-    Route::middleware(['guest:admin', 'preventBackHistory'])->group(function () {
-        Route::view('/login', 'admin.login')->name('login');
-        Route::post('/check', [AdminController::class, 'check'])->name('check');
-    });
+//     Route::middleware(['guest:admin', 'preventBackHistory'])->group(function () {
+//         Route::view('/login', 'admin.login')->name('login');
+//         Route::post('/check', [AdminController::class, 'check'])->name('check');
+//     });
 
-    Route::middleware(['auth:admin', 'preventBackHistory'])->group(function () {
-        Route::view('/home', 'admin.home')->name('home');
-        Route::post('/logout', [AdminController::class, 'logout'])->name('logout');
-    });
-});
+//     Route::middleware(['auth:admin', 'preventBackHistory'])->group(function () {
+//         Route::view('/home', 'admin.home')->name('home');
+//         Route::post('/logout', [AdminController::class, 'logout'])->name('logout');
+//     });
+// });
